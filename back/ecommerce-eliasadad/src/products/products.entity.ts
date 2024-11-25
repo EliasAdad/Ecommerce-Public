@@ -1,13 +1,15 @@
-export class Products {
-    id: number;
+export class Product {
+    constructor(
+        public id: number,
 
-    name: string;
+        public name: string,
 
-    description: string;
+        public description: string,
 
-    price: number;
+        public price: number,
 
-    stock: boolean;
+        public stock: boolean,
 
-    imgUrl: string;
+        public imgUrl: string,
+    ) { }
 }

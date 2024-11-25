@@ -1,17 +1,12 @@
 export class User {
-    id: number;
-
-    email: string;
-
-    name: string;
-
-    password: string;
-
-    address: string;
-
-    phone: string;
-
-    country?: string | undefined;
-
-    city?: string | undefined;
+    constructor(
+        public id: number,
+        public email: string,
+        public name: string,
+        public password: string,
+        public address: string,
+        public phone: string,
+        public country?: string | undefined,
+        public city?: string | undefined,
+    ) { }
 }

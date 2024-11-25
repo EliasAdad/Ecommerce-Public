@@ -1,10 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { Products } from "./products.entity";
+import { Product } from "./products.entity";
+import { User } from "src/users/users.entity";
+import { ProductsDto } from "./products.dto";
 
 @Injectable()
 export class ProductsRepository {
 
-    private products: Products[] = [{
+    private products: Product[] = [{
         id: 1,
         name: 'Laptop',
         description: 'A high-performance laptop.',
@@ -19,18 +21,43 @@ export class ProductsRepository {
         price: 200,
         stock: true,
         imgUrl: 'https://example.com/headphones.jpg',
-    },
-    {
-        id: 3,
-        name: 'Smartphone',
-        description: 'A powerful smartphone with a great camera.',
-        price: 800,
-        stock: false,
-        imgUrl: 'https://example.com/smartphone.jpg',
-    },
+    }
     ]
 
     async getAllProducts() {
         return this.products;
+    }
+
+    async getProductById(id: number) {
+        const product = this.products.find((prod) => prod.id === id)
+        if (!product) return { error: "The product doesn't exist" }
+        return product
+    }
+
+    async addProduct(product: ProductsDto) {
+        let id: number = this.products.length + 1;
+        this.products = [...this.products, { id, ...product }]
+        return { id }
+    }
+
+    async updateProductList(id: number, data: ProductsDto) {
+        const prodIndex = this.products.findIndex((prod) => prod.id === id)
+
+        if (prodIndex === -1) return { error: "The product doesn't exist" }
+
+        this.products[prodIndex] = { ...this.products[prodIndex], ...data }
+
+        return { updated: this.products[prodIndex].id }
+    }
+
+    async deleteProduct(id: number) {
+        const prodIndex = this.products.findIndex((prod) => prod.id === id)
+
+        if (prodIndex === -1) return { error: "The product doesn't exist" };
+
+        const [deletedProd] = this.products.splice(prodIndex, 1)
+
+        return { deletedProd: deletedProd.id }
+
     }
 }
