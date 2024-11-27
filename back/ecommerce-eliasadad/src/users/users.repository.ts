@@ -28,20 +28,28 @@ export class UsersRepository {
         }
     ]
 
-    async getAllUsers() {
+    async getAllUsers(page: number = 1, limit: number = 5) {
         if (!this.users.length) return "Users not found"
-        const users = this.users.map(({ id, name, email, address, phone, country, city }) => {
-            return { id, name, email, address, phone, country, city }
-        });
-        return users;
+
+        const startIndex = (page - 1) * limit
+        const endIndex = startIndex + limit
+        const paginated = this.users.slice(startIndex, endIndex).map(({ password, ...rest }) => {
+            return rest
+        })
+
+        return paginated;
     }
 
     async getUserById(id: number): Promise<Omit<User, 'password'> | string> {
         const user = this.users.find((user) => user.id === id)
         if (!user) return "User doesn't exist"
 
-        const { name, email, address, phone, country, city } = user
-        return { id, name, email, address, phone, country, city }
+        const { password, ...rest } = user
+        return rest;
+    }
+
+    async getByEmail(email: string) {
+        return this.users.find((user) => user.email === email)
     }
 
     async createUser(user: UserDto) {

@@ -8,8 +8,8 @@ export class UsersService {
 
     constructor(private usersRepository: UsersRepository) { }
 
-    getAllUsers() {
-        return this.usersRepository.getAllUsers();
+    getAllUsers(page: number, limit: number) {
+        return this.usersRepository.getAllUsers(page, limit);
     }
 
     getUserById(id: number) {

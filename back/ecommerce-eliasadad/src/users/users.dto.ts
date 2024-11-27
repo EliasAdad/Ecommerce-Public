@@ -1,4 +1,4 @@
-export interface UserDto {
+export class UserDto {
     email: string
     name: string
     password: string
@@ -7,3 +7,5 @@ export interface UserDto {
     country?: string | undefined
     city?: string | undefined
 }
+
+

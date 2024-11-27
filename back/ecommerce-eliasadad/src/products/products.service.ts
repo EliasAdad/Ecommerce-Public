@@ -7,8 +7,8 @@ import { ProductsDto } from "./products.dto";
 export class ProductsService {
     constructor(private productsRepository: ProductsRepository) { }
 
-    getAllProducts() {
-        return this.productsRepository.getAllProducts();
+    getAllProducts(page: number, limit: number) {
+        return this.productsRepository.getAllProducts(page, limit);
     }
 
     getProductById(id: number) {

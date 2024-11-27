@@ -24,8 +24,14 @@ export class ProductsRepository {
     }
     ]
 
-    async getAllProducts() {
-        return this.products;
+    async getAllProducts(page: number = 1, limit: number = 5) {
+        if (!this.products.length) return "There's no products to show"
+
+        const startIndex = (page - 1) * limit
+        const endIndex = startIndex + limit
+        const paginated = this.products.slice(startIndex, endIndex)
+
+        return paginated;
     }
 
     async getProductById(id: number) {
