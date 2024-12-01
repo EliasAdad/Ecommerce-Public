@@ -1,69 +1,86 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { Product } from "./products.entity";
 import { User } from "src/users/users.entity";
 import { ProductsDto } from "./products.dto";
+import * as data from '../utils/seeders/products.json'
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Category } from "src/categories/categories.entity";
 
 @Injectable()
 export class ProductsRepository {
 
-    private products: Product[] = [{
-        id: 1,
-        name: 'Laptop',
-        description: 'A high-performance laptop.',
-        price: 1200,
-        stock: true,
-        imgUrl: 'https://example.com/laptop.jpg',
-    },
-    {
-        id: 2,
-        name: 'Headphones',
-        description: 'Noise-cancelling headphones.',
-        price: 200,
-        stock: true,
-        imgUrl: 'https://example.com/headphones.jpg',
-    }
-    ]
+    constructor(
+        @InjectRepository(Product) private productsRepository: Repository<Product>,
+        @InjectRepository(Category) private categoryRepository: Repository<Category>
+    ) { }
+
+
 
     async getAllProducts(page: number = 1, limit: number = 5) {
-        if (!this.products.length) return "There's no products to show"
+        const products = await this.productsRepository.find({ relations: { category: true } })
+        if (!products.length) return "There are no products to show"
+
+        let productsInStock = products.filter((product) => product.stock > 0)
 
         const startIndex = (page - 1) * limit
         const endIndex = startIndex + limit
-        const paginated = this.products.slice(startIndex, endIndex)
+        const paginated = productsInStock.slice(startIndex, endIndex)
 
         return paginated;
     }
 
-    async getProductById(id: number) {
-        const product = this.products.find((prod) => prod.id === id)
-        if (!product) return { error: "The product doesn't exist" }
+    async addProductsSeeder() {
+        const categories = await this.categoryRepository.find()
+
+        data?.map(async (element) => {
+            const relatedCategory = categories.find((category) => category.name === element.category)
+
+            const newProduct = new Product()
+            newProduct.name = element.name
+            newProduct.description = element.description
+            newProduct.price = element.price
+            newProduct.stock = element.stock
+            newProduct.category = relatedCategory
+
+            await this.productsRepository.createQueryBuilder()
+                .insert()
+                .into(Product)
+                .values(newProduct)
+                .orUpdate(["description", "price", "stock"], ["name"],)
+                .execute()
+        })
+
+        return 'Products added!'
+
+    }
+
+    async getProductById(id: string) {
+        const product = this.productsRepository.findOne({ where: { id } })
+
+        if (!product) throw new NotFoundException("Product not found!")
+
         return product
     }
 
-    async addProduct(product: ProductsDto) {
-        let id: number = this.products.length + 1;
-        this.products = [...this.products, { id, ...product }]
-        return { id }
+    async addProduct(product: Partial<Product>) {
+        const newProduct = this.productsRepository.save(product)
+
+        return newProduct
     }
 
-    async updateProductList(id: number, data: ProductsDto) {
-        const prodIndex = this.products.findIndex((prod) => prod.id === id)
+    async updateProductList(id: string, data: Product) {
+        await this.productsRepository.update(id, data)
 
-        if (prodIndex === -1) return { error: "The product doesn't exist" }
+        const product = await this.productsRepository.findOneBy({ id })
 
-        this.products[prodIndex] = { ...this.products[prodIndex], ...data }
-
-        return { updated: this.products[prodIndex].id }
+        return product
     }
 
-    async deleteProduct(id: number) {
-        const prodIndex = this.products.findIndex((prod) => prod.id === id)
+    async deleteProduct(id: string) {
+        const prevDeleted = await this.productsRepository.findOne({ where: { id } })
+        await this.productsRepository.delete(id)
 
-        if (prodIndex === -1) return { error: "The product doesn't exist" };
-
-        const [deletedProd] = this.products.splice(prodIndex, 1)
-
-        return { deletedProd: deletedProd.id }
-
+        return prevDeleted.id
     }
 }

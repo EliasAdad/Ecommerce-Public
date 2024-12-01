@@ -11,19 +11,23 @@ export class ProductsService {
         return this.productsRepository.getAllProducts(page, limit);
     }
 
-    getProductById(id: number) {
+    getProductById(id: string) {
         return this.productsRepository.getProductById(id)
+    }
+
+    addProductsSeeder() {
+        return this.productsRepository.addProductsSeeder();
     }
 
     addProduct(product: ProductsDto) {
         return this.productsRepository.addProduct(product)
     }
 
-    updateProductList(id: number, data: ProductsDto) {
+    updateProductList(id: string, data: Product) {
         return this.productsRepository.updateProductList(id, data)
     }
 
-    deleteProduct(id: number) {
+    deleteProduct(id: string) {
         return this.productsRepository.deleteProduct(id)
     }
 }

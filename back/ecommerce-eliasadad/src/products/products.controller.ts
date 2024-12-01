@@ -11,14 +11,22 @@ export class ProductsController {
     @Get()
     @HttpCode(HttpStatus.OK)
     getProducts(@Query('page') page: number, @Query('limit') limit: number) {
-        return this.productsService.getAllProducts(page, limit);
+        if (page && limit) {
+            return this.productsService.getAllProducts(page, limit)
+        }
+        return this.productsService.getAllProducts(1, 5);
+    }
+
+    @Get('seeder')
+    addProductsSeeder() {
+        return this.productsService.addProductsSeeder();
     }
 
     @Get(':id')
     @HttpCode(HttpStatus.OK)
-    getProductById(@Param('id', ParseIntPipe) id: number) {
-        const product = this.productsService.getProductById(id)
-        return product
+    getProductById(@Param('id') id: string) {
+        return this.productsService.getProductById(id)
+
     }
 
     @Post('add')
@@ -31,14 +39,14 @@ export class ProductsController {
     @Put('updateList/:id')
     @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.OK)
-    updateProductList(@Param('id', ParseIntPipe) id: number, @Body() data: ProductsDto) {
+    updateProductList(@Param('id') id: string, @Body() data: Product) {
         return this.productsService.updateProductList(id, data)
     }
 
     @Delete('delete/:id')
     @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.OK)
-    deleteProduct(@Param('id', ParseIntPipe) id: number) {
+    deleteProduct(@Param('id') id: string) {
         return this.productsService.deleteProduct(id)
     }
 }

@@ -5,27 +5,29 @@ import { UserDto } from "./users.dto";
 @Injectable()
 export class UsersRepository {
 
-    private users: User[] = [
-        {
-            id: 1,
-            name: "Elias",
-            password: "1234",
-            email: "elias@mail.com",
-            address: "street 104",
-            phone: "1151209008",
-            country: "Argentina",
-            city: "CABA"
-        },
-        {
-            id: 2,
-            name: "Mario",
-            password: "1234",
-            email: "mario@gmail.com",
-            address: "street 210",
-            phone: "1169632877",
-            country: "Argentina",
-            city: "Caseros"
-        }
+    private users = [
+        // {
+        //     id: 1,
+        //     name: "Elias",
+        //     password: "1234",
+        //     email: "elias@mail.com",
+        //     address: "street 104",
+        //     phone: 1151209008,
+        //     country: "Argentina",
+        //     city: "CABA",
+        //     orders: []
+        // },
+        // {
+        //     id: 2,
+        //     name: "Mario",
+        //     password: "1234",
+        //     email: "mario@gmail.com",
+        //     address: "street 210",
+        //     phone: 1169632877,
+        //     country: "Argentina",
+        //     city: "Caseros",
+        //     orders: []
+        // }
     ]
 
     async getAllUsers(page: number = 1, limit: number = 5) {

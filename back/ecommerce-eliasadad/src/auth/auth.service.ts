@@ -20,7 +20,7 @@ export class AuthService {
 
         const user = await this.usersRepository.getByEmail(email);
 
-        if (!user || user.password !== password) {
+        if (!user || user?.password !== password) {
             return { message: 'Invalid email or password, try again!', status: HttpStatus.UNAUTHORIZED }
         }
 
