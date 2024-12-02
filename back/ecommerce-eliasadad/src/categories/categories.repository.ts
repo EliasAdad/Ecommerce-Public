@@ -31,4 +31,4 @@ export class CategoryRepository {
         return await this.categoryRepository.find()
     }
 
-}
+} 

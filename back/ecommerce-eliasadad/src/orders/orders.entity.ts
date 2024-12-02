@@ -15,7 +15,7 @@ export class Order {
     @OneToOne(() => OrderDetail, (orderDetail) => orderDetail.order)
     orderDetail: OrderDetail
 
-    @ManyToOne(() => User, (user) => user.orders)
+    @ManyToOne(() => User, (user) => user.orders, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'user_id' })
     user: User
 }

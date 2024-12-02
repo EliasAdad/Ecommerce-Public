@@ -3,6 +3,7 @@ import { UsersService } from "./users.service";
 import { UserDto } from "./users.dto";
 import { validateUser } from "src/utils/validate";
 import { AuthGuard } from "src/auth/auth.guard";
+import { User } from "./users.entity";
 
 @Controller('users')
 export class UsersController {
@@ -19,7 +20,7 @@ export class UsersController {
     @Get(':id')
     @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.OK)
-    getUserById(@Param('id', ParseIntPipe) id: number) {
+    getUserById(@Param('id') id: string) {
         const user = this.usersService.getUserById(id);
         return user
     }
@@ -35,18 +36,17 @@ export class UsersController {
 
     @Put('update/:id')
     @UseGuards(AuthGuard)
-    @HttpCode(HttpStatus.OK)
-    updateUser(@Param('id', ParseIntPipe) id: number, @Body() data: UserDto) {
-        if (!validateUser(data)) {
-            return 'Invalid user data, try again!'
-        }
+    updateUser(@Param('id') id: string, @Body() data: User) {
+        // if (!validateUser(data)) {
+        //     return 'Invalid user data, try again!'
+        // }
         return this.usersService.updateUser(id, data)
     }
 
     @Delete('delete/:id')
     @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.OK)
-    deleteUser(@Param('id', ParseIntPipe) id: number) {
+    deleteUser(@Param('id') id: string) {
         return this.usersService.deleteUser(id)
 
     }

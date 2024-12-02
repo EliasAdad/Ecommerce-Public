@@ -12,7 +12,7 @@ export class UsersService {
         return this.usersRepository.getAllUsers(page, limit);
     }
 
-    getUserById(id: number) {
+    getUserById(id: string) {
         return this.usersRepository.getUserById(id);
     }
 
@@ -20,11 +20,11 @@ export class UsersService {
         return this.usersRepository.createUser(user);
     }
 
-    updateUser(id: number, data: UserDto) {
+    updateUser(id: string, data: User) {
         return this.usersRepository.updateUser(id, data);
     }
 
-    deleteUser(id: number) {
+    deleteUser(id: string) {
         return this.usersRepository.deleteUser(id)
     }
 }

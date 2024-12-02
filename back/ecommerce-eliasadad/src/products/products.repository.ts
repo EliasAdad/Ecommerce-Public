@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { Product } from "./products.entity";
 import { User } from "src/users/users.entity";
-import { ProductsDto } from "./products.dto";
 import * as data from '../utils/seeders/products.json'
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
@@ -58,13 +57,14 @@ export class ProductsRepository {
     async getProductById(id: string) {
         const product = this.productsRepository.findOne({ where: { id } })
 
-        if (!product) throw new NotFoundException("Product not found!")
+        if (!product) return "Product not found"
 
         return product
     }
 
     async addProduct(product: Partial<Product>) {
         const newProduct = this.productsRepository.save(product)
+
 
         return newProduct
     }
@@ -83,4 +83,4 @@ export class ProductsRepository {
 
         return prevDeleted.id
     }
-}
+} 

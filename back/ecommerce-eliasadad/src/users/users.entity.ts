@@ -31,7 +31,7 @@ export class User {
     @Column({ type: 'boolean', default: false })
     isAdmin: boolean
 
-    @OneToMany(() => Order, (order) => order.user)
+    @OneToMany(() => Order, (order) => order.user, { onDelete: 'CASCADE' })
     @JoinColumn()
     orders: Order[]
 

@@ -25,8 +25,9 @@ export class ProductsController {
     @Get(':id')
     @HttpCode(HttpStatus.OK)
     getProductById(@Param('id') id: string) {
-        return this.productsService.getProductById(id)
+        const product = this.productsService.getProductById(id)
 
+        return product
     }
 
     @Post('add')

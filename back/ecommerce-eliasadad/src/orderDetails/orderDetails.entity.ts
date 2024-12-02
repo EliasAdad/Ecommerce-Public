@@ -12,7 +12,7 @@ export class OrderDetail {
     @Column({ type: 'decimal', precision: 10, scale: 2 })
     price: number
 
-    @OneToOne(() => Order, (order) => order.orderDetail)
+    @OneToOne(() => Order, (order) => order.orderDetail, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'order_id' })
     order: Order
 
