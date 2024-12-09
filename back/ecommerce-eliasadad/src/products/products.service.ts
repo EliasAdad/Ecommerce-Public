@@ -23,7 +23,7 @@ export class ProductsService {
         return this.productsRepository.addProduct(product)
     }
 
-    updateProductList(id: string, data: Product) {
+    updateProductList(id: string, data: Partial<ProductsDto>) {
         return this.productsRepository.updateProductList(id, data)
     }
 

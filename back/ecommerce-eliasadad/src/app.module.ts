@@ -8,6 +8,7 @@ import typeOrmConfig from './config/typeorm';
 import { OrdersModule } from './orders/orders.module';
 import { OrderDetailsModule } from './orderDetails/orderDetails.module';
 import { CategoryModule } from './categories/categories.module';
+import { FileUploadModule } from './file-upload/file-upload.module';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { CategoryModule } from './categories/categories.module';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => configService.get('typeorm'),
     }),
-    UsersModule, ProductsModule, AuthModule, OrdersModule, OrderDetailsModule, CategoryModule
+    UsersModule, ProductsModule, AuthModule, OrdersModule, OrderDetailsModule, CategoryModule, FileUploadModule
   ],
   controllers: [],
   providers: [],

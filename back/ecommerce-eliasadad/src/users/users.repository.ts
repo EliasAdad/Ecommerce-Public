@@ -46,13 +46,13 @@ export class UsersRepository {
         return newUser;
     }
 
-    async updateUser(id: string, data: User) {
-        const user = await this.usersRepository.findOneBy({ id })
+    async updateUser(id: string, data: Partial<UserDto>) {
+        const user = await this.usersRepository.findOne({ where: { id } })
 
         if (!user) return "User not found"
 
-        await this.usersRepository.update(id, { ...data })
-        return user
+        await this.usersRepository.update(id, data)
+        return await this.usersRepository.findOne({ where: { id } })
     }
 
     async deleteUser(id: string) {

@@ -5,6 +5,7 @@ import * as data from '../utils/seeders/products.json'
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Category } from "src/categories/categories.entity";
+import { ProductsDto } from "./products.dto";
 
 @Injectable()
 export class ProductsRepository {
@@ -38,7 +39,7 @@ export class ProductsRepository {
             const newProduct = new Product()
             newProduct.name = element.name
             newProduct.description = element.description
-            newProduct.price = element.price
+            newProduct.price = Number(element.price.toFixed(2))
             newProduct.stock = element.stock
             newProduct.category = relatedCategory
 
@@ -62,19 +63,22 @@ export class ProductsRepository {
         return product
     }
 
-    async addProduct(product: Partial<Product>) {
-        const newProduct = this.productsRepository.save(product)
+    async addProduct(product: ProductsDto) {
+        const newProduct = await this.productsRepository.save(product)
 
 
         return newProduct
     }
 
-    async updateProductList(id: string, data: Product) {
-        await this.productsRepository.update(id, data)
+    async updateProductList(id: string, data: Partial<ProductsDto>) {
 
         const product = await this.productsRepository.findOneBy({ id })
 
-        return product
+        if (!product) return "Product not found";
+
+        await this.productsRepository.update(id, data)
+
+        return await this.productsRepository.findOneBy({ id })
     }
 
     async deleteProduct(id: string) {

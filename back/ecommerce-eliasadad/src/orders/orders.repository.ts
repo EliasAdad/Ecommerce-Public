@@ -20,16 +20,16 @@ export class OrdersRepository {
     async addOrder(orderData: CreateOrderDto) {
         const { userId, products } = orderData
 
-        let total = 0
+        let total: number = 0;
         const user = await this.usersRepository.findOneBy({ id: userId })
 
         if (!user) return "User not found!"
 
-        const newOrder = new Order()
-        newOrder.date = new Date()
-        newOrder.user = user;
+        const order = new Order()
+        order.date = new Date()
+        order.user = user;
 
-        await this.ordersRepository.save(newOrder);
+        const newOrder = await this.ordersRepository.save(order);
 
         const productsArray = await Promise.all(
             products.map(async (element) => {
@@ -40,9 +40,9 @@ export class OrdersRepository {
                     }
                 })
 
-                if (!prod) return
+                // if (!prod) return "Product not found!"
 
-                total += prod.price
+                total += Number(prod.price)
 
                 await this.productsRepository.update({ id: element.id }, { stock: prod.stock - 1 })
 
@@ -54,7 +54,7 @@ export class OrdersRepository {
         const newOrderDetail = new OrderDetail()
         newOrderDetail.order = newOrder
         newOrderDetail.products = productsArray
-        newOrderDetail.price = Number(Number(total).toFixed(2))
+        newOrderDetail.price = Number(total.toFixed(2))
 
         await this.orderDetailRepository.save(newOrderDetail)
 
@@ -65,6 +65,7 @@ export class OrdersRepository {
                 orderDetail: true
             }
         })
+
 
 
     }

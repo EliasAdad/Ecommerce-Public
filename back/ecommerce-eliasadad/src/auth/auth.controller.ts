@@ -18,10 +18,6 @@ export class AuthController {
     async signIn(@Body() data: SignInDto) {
         const { email, password } = data;
 
-        if (!email || !password) {
-            return 'Email and password are required!'
-        }
-
         const user = await this.authService.signIn(email, password)
 
         return {

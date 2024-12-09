@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, Query, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, NotFoundException, Param, ParseIntPipe, ParseUUIDPipe, Post, Put, Query, UseGuards } from "@nestjs/common";
 import { ProductsService } from "./products.service";
 import { Product } from "./products.entity";
 import { ProductsDto } from "./products.dto";
@@ -9,7 +9,6 @@ export class ProductsController {
     constructor(private productsService: ProductsService) { }
 
     @Get()
-    @HttpCode(HttpStatus.OK)
     getProducts(@Query('page') page: number, @Query('limit') limit: number) {
         if (page && limit) {
             return this.productsService.getAllProducts(page, limit)
@@ -23,30 +22,28 @@ export class ProductsController {
     }
 
     @Get(':id')
-    @HttpCode(HttpStatus.OK)
-    getProductById(@Param('id') id: string) {
+    getProductById(@Param('id', ParseUUIDPipe) id: string) {
         const product = this.productsService.getProductById(id)
+
+        if (!product) return "Product not found"
 
         return product
     }
 
     @Post('add')
     @UseGuards(AuthGuard)
-    @HttpCode(HttpStatus.CREATED)
     addProduct(@Body() product: ProductsDto) {
         return this.productsService.addProduct(product)
     }
 
     @Put('updateList/:id')
     @UseGuards(AuthGuard)
-    @HttpCode(HttpStatus.OK)
-    updateProductList(@Param('id') id: string, @Body() data: Product) {
+    updateProductList(@Param('id') id: string, @Body() data: Partial<ProductsDto>) {
         return this.productsService.updateProductList(id, data)
     }
 
     @Delete('delete/:id')
     @UseGuards(AuthGuard)
-    @HttpCode(HttpStatus.OK)
     deleteProduct(@Param('id') id: string) {
         return this.productsService.deleteProduct(id)
     }
