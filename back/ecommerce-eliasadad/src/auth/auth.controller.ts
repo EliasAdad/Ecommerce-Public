@@ -1,6 +1,7 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post } from "@nestjs/common";
+import { Body, Controller, Post } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { SignInDto } from "./auth.dto";
+import { UserDto } from "src/users/users.dto";
 
 
 
@@ -8,20 +9,19 @@ import { SignInDto } from "./auth.dto";
 export class AuthController {
     constructor(private authService: AuthService) { }
 
-    @Get()
-    getAuth(): string {
-        return this.authService.getAuth();
+
+
+    @Post('signup')
+    async signUp(@Body() user: UserDto) {
+        return this.authService.signUp(user);
+
     }
 
     @Post('signin')
-    @HttpCode(HttpStatus.ACCEPTED)
     async signIn(@Body() data: SignInDto) {
         const { email, password } = data;
 
-        const user = await this.authService.signIn(email, password)
+        return await this.authService.signIn(email, password)
 
-        return {
-            user
-        }
     }
 }

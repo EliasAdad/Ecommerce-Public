@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, ParseUUIDPipe, Post, Put, Query, Res, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Put, Query, UseGuards } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { UserDto } from "./users.dto";
 import { AuthGuard } from "src/auth/auth.guard";
@@ -19,12 +19,6 @@ export class UsersController {
     getUserById(@Param('id', ParseUUIDPipe) id: string) {
         const user = this.usersService.getUserById(id);
         return user
-    }
-
-    @Post('createUser')
-    createUser(@Body() user: UserDto) {
-
-        return this.usersService.createUser(user)
     }
 
     @Put('update/:id')
