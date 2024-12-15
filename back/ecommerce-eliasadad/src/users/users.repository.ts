@@ -27,18 +27,22 @@ export class UsersRepository {
     }
 
     async getUserById(id: string) {
-        const user = this.usersRepository.findOne({
+        const user = await this.usersRepository.findOne({
             where: { id }, relations: {
                 orders: true
             }
         })
         if (!user) return "User doesn't exist"
 
-        return user
+        const { password, isAdmin, ...withoutPw } = user
+
+        return withoutPw;
     }
 
     async getByEmail(email: string) {
-        return this.usersRepository.findOne({ where: { email } })
+
+        return await this.usersRepository.findOne({ where: { email } })
+
     }
 
     async createUser(user: UserDto) {
@@ -52,7 +56,12 @@ export class UsersRepository {
         if (!user) return "User not found"
 
         await this.usersRepository.update(id, data)
-        return await this.usersRepository.findOne({ where: { id } })
+
+        const updated = await this.usersRepository.findOne({ where: { id } })
+
+        const { password, isAdmin, ...withoutPw } = updated
+
+        return withoutPw;
     }
 
     async deleteUser(id: string) {

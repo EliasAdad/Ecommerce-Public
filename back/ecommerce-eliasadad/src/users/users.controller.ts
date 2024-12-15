@@ -2,6 +2,9 @@ import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Put, Query, UseGua
 import { UsersService } from "./users.service";
 import { UserDto } from "./users.dto";
 import { AuthGuard } from "src/auth/auth.guard";
+import { RolesGuard } from "src/guards/roles.guard";
+import { Roles } from "src/decorator/roles/roles.decorator";
+import { Role } from "src/enum/role.enum";
 
 @Controller('users')
 export class UsersController {
@@ -9,7 +12,8 @@ export class UsersController {
     ) { }
 
     @Get()
-    @UseGuards(AuthGuard)
+    @Roles(Role.Admin)
+    @UseGuards(AuthGuard, RolesGuard)
     getUsers(@Query('page') page: number, @Query('limit') limit: number) {
         return this.usersService.getAllUsers(page, limit);
     }

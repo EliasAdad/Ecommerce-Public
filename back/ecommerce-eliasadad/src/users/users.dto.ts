@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsNumber, IsString, IsStrongPassword, MaxLength, MinLength } from "class-validator"
+import { IsEmail, IsEmpty, IsNotEmpty, IsNumber, IsString, IsStrongPassword, MaxLength, MinLength } from "class-validator"
 
 export class UserDto {
 
@@ -46,6 +46,9 @@ export class UserDto {
     @MinLength(5)
     @MaxLength(20)
     city?: string | undefined
+
+    @IsEmpty()
+    isAdmin?: boolean
 }
 
 

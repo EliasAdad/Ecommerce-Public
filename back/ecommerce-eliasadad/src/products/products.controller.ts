@@ -3,6 +3,9 @@ import { ProductsService } from "./products.service";
 import { Product } from "./products.entity";
 import { ProductsDto } from "./products.dto";
 import { AuthGuard } from "src/auth/auth.guard";
+import { RolesGuard } from "src/guards/roles.guard";
+import { Roles } from "src/decorator/roles/roles.decorator";
+import { Role } from "src/enum/role.enum";
 
 @Controller('products')
 export class ProductsController {
@@ -37,7 +40,8 @@ export class ProductsController {
     }
 
     @Put('updateList/:id')
-    @UseGuards(AuthGuard)
+    @Roles(Role.Admin)
+    @UseGuards(AuthGuard, RolesGuard)
     updateProductList(@Param('id') id: string, @Body() data: Partial<ProductsDto>) {
         return this.productsService.updateProductList(id, data)
     }

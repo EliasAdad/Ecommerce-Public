@@ -17,8 +17,8 @@ export class CategoryRepository {
             const category = await this.categoryRepository.findOne({ where: { name: element.category } })
 
             if (!category) {
-                const newCategory = await this.categoryRepository.create({ name: element.category })
-                await this.categoryRepository.save(newCategory);
+                await this.categoryRepository.save({ name: element.category })
+                // await this.categoryRepository.save(newCategory);
             }
         }
 

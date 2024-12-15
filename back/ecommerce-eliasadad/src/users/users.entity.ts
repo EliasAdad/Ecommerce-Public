@@ -29,7 +29,7 @@ export class User {
     city?: string | undefined
 
     @Column({ type: 'boolean', default: false })
-    isAdmin: boolean
+    isAdmin?: boolean
 
     @OneToMany(() => Order, (order) => order.user, { onDelete: 'CASCADE' })
     @JoinColumn()

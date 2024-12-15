@@ -1,9 +1,9 @@
 import { BadRequestException, HttpStatus, Injectable } from "@nestjs/common";
 import { UsersRepository } from "src/users/users.repository";
-import { SignInDto } from "./auth.dto";
 import { UserDto } from "src/users/users.dto";
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt'
+import { Role } from "src/enum/role.enum";
 
 
 @Injectable()
@@ -26,7 +26,7 @@ export class AuthService {
 
         const newUser = await this.usersRepository.createUser({ ...user, password: hashedPassword });
 
-        const { password, confirmPassword, ...withoutPw } = newUser
+        const { password, confirmPassword, isAdmin, ...withoutPw } = newUser
 
         return withoutPw;
     }
@@ -48,7 +48,7 @@ export class AuthService {
             sub: user.id,
             id: user.id,
             email: user.email,
-            isAdmin: user.isAdmin
+            roles: [user.isAdmin ? Role.Admin : Role.User]
         }
 
         const token = this.jwtService.sign(payload);

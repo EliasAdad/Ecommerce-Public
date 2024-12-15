@@ -66,7 +66,6 @@ export class ProductsRepository {
     async addProduct(product: ProductsDto) {
         const newProduct = await this.productsRepository.save(product)
 
-
         return newProduct
     }
 
