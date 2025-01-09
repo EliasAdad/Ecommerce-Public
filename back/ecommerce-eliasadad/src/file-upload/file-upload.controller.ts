@@ -1,4 +1,4 @@
-import { Controller, FileTypeValidator, MaxFileSizeValidator, Param, ParseFilePipe, Post, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Controller, FileTypeValidator, MaxFileSizeValidator, Param, ParseFilePipe, ParseUUIDPipe, Post, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FileUploadService } from "./file-upload.service";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { AuthGuard } from "src/auth/auth.guard";
@@ -21,7 +21,7 @@ export class FileUploadController {
                 fileType: /(jpg|jpeg|png|webp)$/,
             }),
         ],
-    })) file: Express.Multer.File, @Param('id') id: string) {
+    })) file: Express.Multer.File, @Param('id', ParseUUIDPipe) id: string) {
 
         return this.fileUploadService.uploadImage(file, id)
     }

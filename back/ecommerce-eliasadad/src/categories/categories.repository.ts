@@ -18,7 +18,6 @@ export class CategoryRepository {
 
             if (!category) {
                 await this.categoryRepository.save({ name: element.category })
-                // await this.categoryRepository.save(newCategory);
             }
         }
 

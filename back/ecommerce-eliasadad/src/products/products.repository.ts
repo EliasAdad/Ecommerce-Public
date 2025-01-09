@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { Product } from "./products.entity";
-import { User } from "src/users/users.entity";
 import * as data from '../utils/seeders/products.json'
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
@@ -56,18 +55,29 @@ export class ProductsRepository {
     }
 
     async getProductById(id: string) {
-        const product = this.productsRepository.findOne({ where: { id } })
+        const product = await this.productsRepository.findOne({ where: { id }, relations: { category: true } })
 
-        if (!product) return "Product not found"
+        if (!product || product.stock <= 0) throw new NotFoundException("Product not found or it's out of stock!")
 
         return product
     }
 
     async addProduct(product: ProductsDto) {
-        const newProduct = await this.productsRepository.save(product)
 
-        return newProduct
+        const category = await this.categoryRepository.findOne({ where: { name: product.category.name } })
+
+
+        const newProduct = new Product()
+        newProduct.name = product.name
+        newProduct.description = product.description
+        newProduct.price = product.price
+        newProduct.stock = product.stock
+        newProduct.category = category
+
+
+        return await this.productsRepository.save(newProduct)
     }
+
 
     async updateProductList(id: string, data: Partial<ProductsDto>) {
 
