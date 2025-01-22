@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { UsersRepository } from "./users.repository";
-import { User } from "./users.entity";
 import { UserDto } from "./users.dto";
+import { UpdateUserDto } from "./update-users.dto";
 
 @Injectable()
 export class UsersService {
@@ -20,7 +20,7 @@ export class UsersService {
         return this.usersRepository.createUser(user);
     }
 
-    updateUser(id: string, data: Partial<UserDto>) {
+    updateUser(id: string, data: UpdateUserDto) {
         return this.usersRepository.updateUser(id, data);
     }
 

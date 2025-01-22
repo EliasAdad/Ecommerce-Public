@@ -5,7 +5,11 @@ import { AuthGuard } from "src/auth/auth.guard";
 import { RolesGuard } from "src/guards/roles.guard";
 import { Roles } from "src/decorator/roles/roles.decorator";
 import { Role } from "src/enum/role.enum";
+import { ApiBearerAuth, ApiBody, ApiParam, ApiTags, PartialType } from "@nestjs/swagger";
+import { UpdateUserDto } from "./update-users.dto";
 
+@ApiBearerAuth()
+@ApiTags("Users")
 @Controller('users')
 export class UsersController {
     constructor(private usersService: UsersService,
@@ -27,7 +31,15 @@ export class UsersController {
 
     @Put('update/:id')
     @UseGuards(AuthGuard)
-    updateUser(@Param('id', ParseUUIDPipe) id: string, @Body() data: Partial<UserDto>) {
+    @ApiBody({
+        description: "The information you want to update from the user",
+        type: UserDto
+    })
+    @ApiParam({
+        name: "id",
+        description: "The ID of the user to update"
+    })
+    updateUser(@Param('id', ParseUUIDPipe) id: string, @Body() data: UpdateUserDto) {
 
         return this.usersService.updateUser(id, data)
     }

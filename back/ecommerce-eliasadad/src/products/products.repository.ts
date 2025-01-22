@@ -5,6 +5,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Category } from "src/categories/categories.entity";
 import { ProductsDto } from "./products.dto";
+import { UpdateProductsDto } from "./update-products.dto";
 
 @Injectable()
 export class ProductsRepository {
@@ -79,7 +80,7 @@ export class ProductsRepository {
     }
 
 
-    async updateProductList(id: string, data: Partial<ProductsDto>) {
+    async updateProductList(id: string, data: UpdateProductsDto) {
 
         const product = await this.productsRepository.findOneBy({ id })
 

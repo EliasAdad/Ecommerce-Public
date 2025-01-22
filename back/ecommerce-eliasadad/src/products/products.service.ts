@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ProductsRepository } from "./products.repository";
 import { Product } from "./products.entity";
 import { ProductsDto } from "./products.dto";
+import { UpdateProductsDto } from "./update-products.dto";
 
 @Injectable()
 export class ProductsService {
@@ -23,7 +24,7 @@ export class ProductsService {
         return this.productsRepository.addProduct(product)
     }
 
-    updateProductList(id: string, data: Partial<ProductsDto>) {
+    updateProductList(id: string, data: UpdateProductsDto) {
         return this.productsRepository.updateProductList(id, data)
     }
 

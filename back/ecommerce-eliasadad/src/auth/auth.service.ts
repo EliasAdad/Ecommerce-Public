@@ -1,4 +1,4 @@
-import { BadRequestException, HttpStatus, Injectable } from "@nestjs/common";
+import { BadRequestException, HttpStatus, Injectable, UnauthorizedException } from "@nestjs/common";
 import { UsersRepository } from "src/users/users.repository";
 import { UserDto } from "src/users/users.dto";
 import * as bcrypt from 'bcrypt';
@@ -8,8 +8,10 @@ import { Role } from "src/enum/role.enum";
 
 @Injectable()
 export class AuthService {
-    constructor(private usersRepository: UsersRepository,
-        private jwtService: JwtService) { }
+    constructor(
+        private usersRepository: UsersRepository,
+        private jwtService: JwtService
+    ) { }
 
 
 
@@ -36,13 +38,13 @@ export class AuthService {
 
 
         if (!email || !password) {
-            return { message: 'Email or password are required', status: HttpStatus.UNAUTHORIZED }
+            throw new UnauthorizedException("Email and password are required!")
         }
 
         const user = await this.usersRepository.getByEmail(email);
         const isValidPassword = await bcrypt.compare(password, user.password)
 
-        if (!user || !isValidPassword) throw new BadRequestException("User not found or invalid password, try again")
+        if (!user || !isValidPassword) throw new BadRequestException("Email doesn't exist or invalid password, try again")
 
         const payload = {
             sub: user.id,

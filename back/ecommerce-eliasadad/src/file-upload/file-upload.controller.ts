@@ -15,14 +15,14 @@ export class FileUploadController {
         validators: [
             new MaxFileSizeValidator({
                 maxSize: 2000000,
-                message: "Image can't be larger than 200kb"
+                message: "Image can't be larger than 2mb"
             }),
             new FileTypeValidator({
                 fileType: /(jpg|jpeg|png|webp)$/,
             }),
         ],
-    })) file: Express.Multer.File, @Param('id', ParseUUIDPipe) id: string) {
+    })) file: Express.Multer.File, @Param('id', ParseUUIDPipe) productId: string) {
 
-        return this.fileUploadService.uploadImage(file, id)
+        return this.fileUploadService.uploadImage(file, productId)
     }
 }
