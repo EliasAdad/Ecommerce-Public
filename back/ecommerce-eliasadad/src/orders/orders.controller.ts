@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Req, UseGuards } from "@nestjs/common";
 import { OrdersService } from "./orders.service";
 import { CreateOrderDto } from "./orders.dto";
 import { AuthGuard } from "src/auth/auth.guard";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { Request } from "express";
 
 
 @ApiBearerAuth()
@@ -19,7 +20,9 @@ export class OrdersController {
 
     @Get(':id')
     @UseGuards(AuthGuard)
-    getOrder(@Param('id') id: string) {
-        return this.ordersService.getOrder(id)
+    getOrder(@Param('id') id: string, @Req() request: any) {
+        const userId = request.user.id
+
+        return this.ordersService.getOrder(id, userId)
     }
 } 

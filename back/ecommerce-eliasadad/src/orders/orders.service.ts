@@ -12,7 +12,7 @@ export class OrdersService {
         return this.ordersRepository.addOrder(order)
     }
 
-    getOrder(id: string) {
-        return this.ordersRepository.getOrder(id)
+    getOrder(id: string, userId: string) {
+        return this.ordersRepository.getOrder(id, userId)
     }
 }

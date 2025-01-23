@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "src/users/users.entity";
 import { Repository } from "typeorm";
@@ -40,7 +40,7 @@ export class OrdersRepository {
                     }
                 })
 
-                // if (!prod) return "Product not found!"
+                if (!prod || prod.stock <= 0) throw new BadRequestException("The product is out of stock or it doesn't exist.")
 
                 total += Number(prod.price)
 
@@ -71,10 +71,11 @@ export class OrdersRepository {
     }
 
 
-    async getOrder(id: string) {
+    async getOrder(id: string, userId: string) {
+
 
         const order = await this.ordersRepository.findOne({
-            where: { id },
+            where: { id, user: { id: userId } },
             relations: {
                 orderDetail: {
                     products: true
@@ -82,9 +83,14 @@ export class OrdersRepository {
             }
         })
 
-        if (!order) return "Order not found"
+        if (!order) throw new BadRequestException("The order doesn't exist or the ID is incorrect")
 
         return order;
+
+
+
+
+
     }
 }
 

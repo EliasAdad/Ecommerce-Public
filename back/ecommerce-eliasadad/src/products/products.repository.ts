@@ -21,13 +21,25 @@ export class ProductsRepository {
         const products = await this.productsRepository.find({ relations: { category: true } })
         if (!products.length) return "There are no products to show"
 
-        let productsInStock = products.filter((product) => product.stock > 0)
+        // let productsInStock = products.filter((product) => product.stock > 0)
 
         const startIndex = (page - 1) * limit
         const endIndex = startIndex + limit
-        const paginated = productsInStock.slice(startIndex, endIndex)
+        const paginated = products.slice(startIndex, endIndex)
 
         return paginated;
+    }
+
+
+    async getByName(name: string) {
+
+        const product = await this.productsRepository.findOne({ where: { name } })
+
+
+        if (!product) throw new NotFoundException("Product not found")
+
+        return product;
+
     }
 
     async addProductsSeeder() {

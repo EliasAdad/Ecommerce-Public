@@ -7,11 +7,17 @@ import { Roles } from "src/decorator/roles/roles.decorator";
 import { Role } from "src/enum/role.enum";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { UpdateProductsDto } from "./update-products.dto";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Product } from "./products.entity";
+import { Repository } from "typeorm";
+import { ProductsRepository } from "./products.repository";
 
 @ApiTags("Products")
 @Controller('products')
 export class ProductsController {
-    constructor(private productsService: ProductsService) { }
+    constructor(private productsService: ProductsService,
+        private productRepository: ProductsRepository
+    ) { }
 
     @Get()
     getProducts(@Query('page') page: number, @Query('limit') limit: number) {
@@ -26,6 +32,18 @@ export class ProductsController {
         return this.productsService.addProductsSeeder();
     }
 
+
+    @Get(':productName')
+    getByName(@Param("productName") name: string) {
+        const product = this.productRepository.getByName(name)
+
+        if (!product) throw new NotFoundException("Product not found")
+
+        return product
+    }
+
+
+
     @Get(':id')
     getProductById(@Param('id', ParseUUIDPipe) id: string) {
         const product = this.productsService.getProductById(id)
@@ -34,6 +52,8 @@ export class ProductsController {
 
         return product
     }
+
+
 
     @ApiBearerAuth()
     @Post('add')
